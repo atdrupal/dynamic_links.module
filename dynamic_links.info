@@ -1,0 +1,6 @@
+﻿; $Id$
+name = Dynamic links
+description = @TODO
+version = VERSION
+core = 6.x
+dependencies[] = path

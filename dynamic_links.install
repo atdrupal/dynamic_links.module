@@ -1,0 +1,59 @@
+<?php
+// $Id$
+
+/**
+ * @file dynamic_links.install
+ */
+
+/**
+ *  Implementation of hook_install().
+ */
+function dynamic_links_install() {
+  db_query("UPDATE {system} SET weight = '-100' WHERE name='dynamic_links'");
+  drupal_set_message(
+    sprintf(
+      "For proper operation of the module, please update the nodes in %s",
+      l('Dynamic links','admin/dynamic_links')
+    )
+  );
+
+  drupal_install_schema('dynamic_links');
+}
+
+/**
+ * Implements hook_uninstall().
+ */
+function dynamic_links_uninstall() {
+  variable_del('dynamic_links_current_node');
+  
+  drupal_uninstall_schema('dynamic_links');
+}
+
+/**
+ * Implements hook_schema().
+ */
+function dynamic_links_schema() {
+  $schema['dynamic_links_node'] = array(
+    'description' => 'Save node\'s internal links',
+    'fields' => array(
+      'nid' => array(
+        'description' => 'Node ID',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE
+      ),
+      'content_nid' => array(
+        'description' => ' ID of Nodes linked inside.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE
+      ),
+    ),
+    'indexes' => array(
+      'nid' => array('nid'),
+      'content_nid' => array('content_nid'),
+    )
+  );
+
+  return $schema;
+}
